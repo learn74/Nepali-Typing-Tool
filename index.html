@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nepali & English Typing App</title>
+  <style>
+    @font-face {
+      font-family: 'Preeti';
+      src: url('https://res.cloudinary.com/drrwlrqap/raw/upload/v1738120456/preeti_ehyfot.ttf') format('truetype');
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #4CAF50;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+    }
+
+    textarea {
+      width: 100%;
+      height: 300px;
+      font-size: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: #2196F3;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin: 10px 0;
+    }
+
+    button {
+      background-color: #f44336;
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      cursor: pointer;
+      border-radius: 5px;
+      font-size: 16px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    button:hover {
+      background-color: #d32f2f;
+    }
+
+    button i {
+      font-size: 18px;
+    }
+
+    label {
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    input[type="radio"] {
+      margin-right: 8px;
+      cursor: pointer;
+    }
+  </style>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <h1>Nepali & English Typing Tool</h1>
+  <div class="container">
+    <div class="toolbar">
+      <label>
+        <input type="radio" name="language" value="english" onchange="switchToEnglish()" checked>
+        English
+      </label>
+      <label>
+        <input type="radio" name="language" value="nepali" onchange="switchToNepali()">
+        Nepali
+      </label>
+    </div>
+
+    <textarea id="typingArea" placeholder="Rabindra Sahani..."></textarea>
+
+    <div class="toolbar">
+      <button onclick="increaseFontSize()">
+        <i class="fas fa-plus"></i> Increase Font
+      </button>
+      <button onclick="decreaseFontSize()">
+        <i class="fas fa-minus"></i> Decrease Font
+      </button>
+      <button onclick="clearText()">
+        <i class="fas fa-times"></i> Clear
+      </button>
+      <button onclick="readText()">
+        <i class="fas fa-volume-up"></i> Read Text
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const typingArea = document.getElementById("typingArea");
+    let currentLanguage = "english"; // Default language
+    let currentFontSize = 20; // Default font size
+
+    function switchToEnglish() {
+      typingArea.style.fontFamily = "Arial, sans-serif";
+      currentLanguage = "english";
+      alert("Switched to English typing.");
+    }
+
+    function switchToNepali() {
+      typingArea.style.fontFamily = "Preeti";
+      currentLanguage = "nepali";
+      alert("Switched to Nepali typing using Preeti font.");
+    }
+
+    function clearText() {
+      typingArea.value = "";
+    }
+
+    function readText() {
+      let text = typingArea.value.trim();
+      if (text === "") {
+        alert("Please type something to read.");
+        return;
+      }
+
+      if (currentLanguage === "nepali") {
+        text = preetiToUnicode(text); // Convert Preeti to Unicode before reading
+      }
+
+      let speech = new SpeechSynthesisUtterance(text);
+      speech.lang = currentLanguage === "nepali" ? "ne-NP" : "en-US";
+      speech.rate = 1; // Normal speaking speed
+      window.speechSynthesis.speak(speech);
+    }
+
+    function increaseFontSize() {
+      currentFontSize += 2;
+      typingArea.style.fontSize = currentFontSize + "px";
+    }
+
+    function decreaseFontSize() {
+      if (currentFontSize > 10) {
+        currentFontSize -= 2;
+        typingArea.style.fontSize = currentFontSize + "px";
+      }
+    }
+
+    function preetiToUnicode(preetiText) {
+      const mapping = {
+        's': 'स', 'sf': 'सि', 'd': 'द', 'df': 'दि', 'a': 'अ', 'af': 'आ',
+        'c': 'क', 'cf': 'कि', 'h': 'ह', 'j': 'ज', 'n': 'न', 'o': 'ओ',
+        'p': 'प', 'pm': 'फ', 'l': 'ल', 'L': 'ळ', 'u': 'उ', 's]': 'सू',
+        'so': 'सो', 'p]': 'पे', 'p{': 'पो', '1': '१', '2': '२',
+        '3': '३', '4': '४', '5': '५', '6': '६', '7': '७', '8': '८',
+        '9': '९', '0': '०', '=': '=', 'o]': 'ओ', 'm': 'म',
+        '/m': 'मे', 'cf]': 'के', 'cf}': 'कै', 'c]': 'को', 'c}': 'कै', 
+      };
+
+      let unicodeText = "";
+      for (let i = 0; i < preetiText.length; i++) {
+        let char = preetiText[i];
+        let nextChar = preetiText[i + 1] || "";
+        let combinedChar = char + nextChar;
+
+        if (mapping[combinedChar]) {
+          unicodeText += mapping[combinedChar];
+          i++; // Skip the next character as it's already mapped
+        } else {
+          unicodeText += mapping[char] || char;
+        }
+      }
+
+      return unicodeText;
+    }
+  </script>
+</body>
+</html>
