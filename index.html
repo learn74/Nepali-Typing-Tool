@@ -21,26 +21,23 @@
     }
 
     .container {
-      max-width: 1500px;
+      max-width: 900px;
       margin: auto;
     }
 
     textarea {
-      
-      widht: 60vw;
-     height: 80vh;
-      resize: vertical;
-      overflow: auto;
+      width: 60vw;
+      height: 85vh;
       font-size: 20px;
+      resize: vertical
       padding: 10px;
-      border: 3px solid red;
+      border: 1px solid red;
       border-radius: 5px;
       outline: none;
     }
 
     textarea:focus {
       border-color: #2196F3;
-      outline: none;
     }
 
     .toolbar {
@@ -61,7 +58,7 @@
       font-size: 16px;
       display: flex;
       align-items: center;
-      gap: 20px;
+      gap: 80px;
     }
 
     button:hover {
@@ -98,7 +95,7 @@
       </label>
     </div>
 
-    <textarea id="typingArea" placeholder="write something here..."></textarea>
+    <textarea id="typingArea" placeholder="Rabindra Sahani..."></textarea>
 
     <div class="toolbar">
       <button onclick="increaseFontSize()">
@@ -116,8 +113,15 @@
     </div>
   </div>
 
+  <!-- Audio Player (Hidden) -->
+  <audio id="songPlayer">
+    <source src="https://docs.google.com/uc?export=download&id=16tSJFLeemAdUSwDhZ_MYu7ADea2hPHIy" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
+
   <script>
     const typingArea = document.getElementById("typingArea");
+    const songPlayer = document.getElementById("songPlayer");
     let currentLanguage = "english"; // Default language
     let currentFontSize = 20; // Default font size
 
@@ -193,6 +197,15 @@
 
       return unicodeText;
     }
+
+    // 🎵 Detect and Play Song When Typing "papa mai chhoti se badi hogai kyu"
+    typingArea.addEventListener("input", function () {
+      let text = typingArea.value.trim().toLowerCase();
+
+      if (text.includes("papa mai chhoti se badi hogai kyu")) {
+        songPlayer.play();
+      }
+    });
   </script>
 </body>
-</html>
+      </html>
