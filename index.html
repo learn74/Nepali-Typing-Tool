@@ -65,10 +65,6 @@
       background-color: #d32f2f;
     }
 
-    button i {
-      font-size: 18px;
-    }
-
     label {
       font-size: 18px;
       cursor: pointer;
@@ -95,7 +91,7 @@
       </label>
     </div>
 
-    <textarea id="typingArea" placeholder="write a story here..."></textarea>
+    <textarea id="typingArea" placeholder="Write something here..."></textarea>
 
     <div class="toolbar">
       <button onclick="increaseFontSize()">
@@ -113,27 +109,17 @@
     </div>
   </div>
 
-  <!-- Audio Player (Hidden) -->
-  <audio id="songPlayer">
-    <source src="https://docs.google.com/uc?export=download&id=16tSJFLeemAdUSwDhZ_MYu7ADea2hPHIy" type="audio/mpeg">
-    Your browser does not support the audio element.
-  </audio>
-
   <script>
     const typingArea = document.getElementById("typingArea");
-    const songPlayer = document.getElementById("songPlayer");
-    let currentLanguage = "english"; // Default language
     let currentFontSize = 20; // Default font size
 
     function switchToEnglish() {
       typingArea.style.fontFamily = "Arial, sans-serif";
-      currentLanguage = "english";
       alert("Switched to English typing.");
     }
 
     function switchToNepali() {
       typingArea.style.fontFamily = "Preeti";
-      currentLanguage = "nepali";
       alert("Switched to Nepali typing using Preeti font.");
     }
 
@@ -148,12 +134,18 @@
         return;
       }
 
-      if (currentLanguage === "nepali") {
-        text = preetiToUnicode(text); // Convert Preeti to Unicode before reading
-      }
-
       let speech = new SpeechSynthesisUtterance(text);
-      speech.lang = currentLanguage === "nepali" ? "ne-NP" : "en-US";
+      
+      // Detect the selected language
+      const isNepali = document.querySelector('input[name="language"]:checked').value === "nepali";
+      
+      if (isNepali) {
+        text = preetiToUnicode(text); // Convert Preeti to Unicode before reading
+        speech.lang = "ne-NP";
+      } else {
+        speech.lang = "en-US";
+      }
+      
       speech.rate = 1; // Normal speaking speed
       window.speechSynthesis.speak(speech);
     }
@@ -197,15 +189,6 @@
 
       return unicodeText;
     }
-
-    // 🎵 Detect and Play Song When Typing "papa mai chhoti se badi hogai kyu"
-    typingArea.addEventListener("input", function () {
-      let text = typingArea.value.trim().toLowerCase();
-
-      if (text.includes("papa mai chhoti se badi hogai kyu")) {
-        songPlayer.play();
-      }
-    });
   </script>
 </body>
-      </html>
+</html>
